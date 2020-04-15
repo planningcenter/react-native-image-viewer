@@ -135,7 +135,8 @@ export default class ImageViewer extends React.Component<Props, State> {
   public getSize(uri: string, success: (width: number, height: number, headers: any) => void, failure: (error: any) => void) {
     const { onHeadersNeeded } = this!.props!;
     if(onHeadersNeeded) {
-      onHeadersNeeded(uri, (headers: any) => Image.getSizeWithHeaders(uri, headers, success, failure))
+      // @ts-ignore
+      onHeadersNeeded(uri, (headers) => Image.getSizeWithHeaders(uri, headers, (width: number, height: number) => success(width, height, headers), failure))
     } else {
       Image.getSize(uri, (width: number, height: number) => success(width, height, null), failure)
     }

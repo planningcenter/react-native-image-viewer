@@ -294,8 +294,6 @@ export interface IImageInfo {
    * 初始是否不超高 TODO:
    */
   freeWidth?: boolean;
-
-  headers?: any;
 }
 
 export interface IImageSize {
@@ -303,4 +301,5 @@ export interface IImageSize {
   height: number;
   // 图片加载状态
   status: 'loading' | 'success' | 'fail';
+  headers?: any;
 }
