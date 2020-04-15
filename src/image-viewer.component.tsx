@@ -236,6 +236,9 @@ export default class ImageViewer extends React.Component<Props, State> {
     if (index < this.state.imageSizes!.length) {
       this.loadImage(index + 1);
     }
+    if (index > 0) {
+      this.loadImage(index - 1);
+    }
   };
   /**
    * 触发溢出水平滚动
