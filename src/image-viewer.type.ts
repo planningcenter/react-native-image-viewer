@@ -127,6 +127,8 @@ export class Props {
     //
   };
 
+  public onHeadersNeeded?: (url: string,  success: (headers: any) => void) => void;
+
   public onMove?: (position?: IOnMove) => void = () => {
     //
   };
@@ -292,6 +294,8 @@ export interface IImageInfo {
    * 初始是否不超高 TODO:
    */
   freeWidth?: boolean;
+
+  headers?: any;
 }
 
 export interface IImageSize {

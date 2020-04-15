@@ -69,7 +69,8 @@ export default class ImageViewer extends React.Component<Props, State> {
       // 显示动画
       Animated.timing(this.fadeAnim, {
         toValue: 1,
-        duration: 200
+        duration: 200,
+        useNativeDriver: true
       }).start();
     }
   }
@@ -109,7 +110,8 @@ export default class ImageViewer extends React.Component<Props, State> {
         // 显示动画
         Animated.timing(this.fadeAnim, {
           toValue: 1,
-          duration: 200
+          duration: 200,
+          useNativeDriver: true
         }).start();
       }
     );
@@ -128,6 +130,15 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.positionXNumber = this.width * (this.state.currentShowIndex || 0) * (I18nManager.isRTL ? 1 : -1);
     this.standardPositionX = this.positionXNumber;
     this.positionX.setValue(this.positionXNumber);
+  }
+
+  public getSize(uri: string, success: (width: number, height: number, headers: any) => void, failure: (error: any) => void) {
+    const { onHeadersNeeded } = this!.props!;
+    if(onHeadersNeeded) {
+      onHeadersNeeded(uri, (headers: any) => Image.getSizeWithHeaders(uri, headers, success, failure))
+    } else {
+      Image.getSize(uri, (width: number, height: number) => success(width, height, null), failure)
+    }
   }
 
   /**
@@ -192,11 +203,12 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    Image.getSize(
+    this.getSize(
       image.url,
-      (width: number, height: number) => {
+      (width: number, height: number, headers: any) => {
         imageStatus.width = width;
         imageStatus.height = height;
+        imageStatus.headers = headers;
         imageStatus.status = 'success';
         saveImageSize();
       },
@@ -304,7 +316,8 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.standardPositionX = this.positionXNumber;
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
-      duration: this.props.pageAnimateTime
+      duration: this.props.pageAnimateTime,
+      useNativeDriver: true
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) - 1;
@@ -337,7 +350,8 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.standardPositionX = this.positionXNumber;
     Animated.timing(this.positionX, {
       toValue: this.positionXNumber,
-      duration: this.props.pageAnimateTime
+      duration: this.props.pageAnimateTime,
+      useNativeDriver: true
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) + 1;
@@ -361,7 +375,8 @@ export default class ImageViewer extends React.Component<Props, State> {
     this.positionXNumber = this.standardPositionX;
     Animated.timing(this.positionX, {
       toValue: this.standardPositionX,
-      duration: 150
+      duration: 150,
+      useNativeDriver: true
     }).start();
   }
 
@@ -524,6 +539,7 @@ export default class ImageViewer extends React.Component<Props, State> {
             }
             image.props.source = {
               uri: image.url,
+              headers: imageInfo.headers,
               ...image.props.source
             };
           }
